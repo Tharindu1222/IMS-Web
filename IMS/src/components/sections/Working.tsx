@@ -22,7 +22,7 @@ function Working() {
                     variants={slideUpVariants}
                     className='text-black uppercase text-[40px] font-bold text-center'
                     >
-                      How Our Service Works
+                      We Give The Best Solution
                 </motion.h1>
                   <motion.div
                     variants={slideUpVariants}
@@ -35,7 +35,7 @@ function Working() {
                 initial='hidden'
                 whileInView="visible"
                 variants={zoomInVariants}
-                className='w-full grid lg:grid-cols-4 grid-cols-1 justify-center items-start gap-[20px] mt-[30px]'
+                className='w-[1250px] grid lg:grid-cols-4 grid-cols-1 justify-center items-start gap-[20px] mt-[40px]'
                 >
                   
                   {planning.map((item, index) => (

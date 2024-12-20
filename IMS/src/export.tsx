@@ -16,67 +16,55 @@ import client3 from "../src/assets/client3.png";
 
 export const allservices = [
   {
-    icon: building,
-    title: "BUILDING RENOVATION",
+    icon: paint,
+    title: "Paint Inspection",
     about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "IMS Coatings experience inspectors can Conduct all required testing for surface preparation and Coating application complying to SSPC, ASTM, ISO & NACE Standards, helping customers to have the maximum protection and durability for their protected steel and other constructions.",
   },
   {
     icon: construction,
-    title: "CONSTRUCTION SERVICES",
+    title: "Paint applications",
     about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "We Undertake All kind of Paint Application Contracts to provide customers multi services under one Roof. We make sure a quality product to the end user with the latest technolgy of Abrasive Blast cleaning and paint application.",
   },
   {
     icon: design,
-    title: "DESIGN & PLANNING",
+    title: "Presentations",
     about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "We also conduct presentations upon customer request, about our capabilities with our worldwide products and for our customers to understand our capacities and areas where we can Implement.",
   },
   {
     icon: document,
-    title: "DOCUMENTATION",
+    title: "Lectures & Trainings",
     about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    icon: paint,
-    title: "INTERIOR DESIGN",
-    about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  },
-  {
-    icon: support,
-    title: "CUSTOMER SUPPORT",
-    about:
-      "Sample text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "Lectures on Corrosion and Corrosion control - IMS Consultant with vast experience conduct lectures on Corrosion and corrosion control upon Customer request passing important information to share and what paints can do to increase Protection and train applicators to improve skills and to outcome with the best properties.",
   },
 ];
 
 export const planning = [
   {
     icon: IoDocumentTextSharp,
-    title: "planning",
+    title: "Customer Service",
     about:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas gravida cursus",
+      "Individual acount management , Quick order entry process",
   },
   {
     icon: MdOutlineDesignServices,
-    title: "design",
+    title: "Sales",
     about:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas gravida cursus",
+      "Fast and reliable system recommendations, product availability",
   },
   {
     icon: FaRegBuilding,
-    title: "building",
+    title: "Support",
     about:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas gravida cursus",
+      "Solving your problems is what we do best, we are here for you",
   },
   {
     icon: FaSitemap,
-    title: "finish",
+    title: "Technical Service",
     about:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas gravida cursus",
+      "Superior hands - on field support, on location servicce available",
   },
 ];
 
