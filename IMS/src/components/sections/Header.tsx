@@ -11,6 +11,7 @@ function Header() {
     { link: 'Services', path: 'clients' },
     { link: 'Projects', path: 'projects' },
     { link: 'Contact', path: 'contact' },
+    
   ];
 
   const toggleMenu = () => setIsOpen(!isOpen);
