@@ -26,10 +26,7 @@ function Portfolio() {
         >
           Portfolio
         </motion.h1>
-        <a href="/createportfolio" className="text-blue-500 underline">
-          Create New Project
         
-        </a>
         <motion.h1
           variants={slideUpVariants}
           className="text-white uppercase text-[40px] font-bold text-center"

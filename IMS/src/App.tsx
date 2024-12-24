@@ -11,6 +11,7 @@ import Services from './components/sections/servises';
 import Marketssection from './components/sections/Markets';
 import CreatePortfolio from './components/Portfolio/Form';
 import Dashboard from './components/Portfolio/Dashboard';
+import Profile from './components/sections/Profile';
 
 function App() {
   return (
@@ -33,7 +34,8 @@ function App() {
             </>
           }
         />
-        <Route path="/createportfolio" element={<CreatePortfolio />} />
+        <Route path="/create-portfolio" element={<CreatePortfolio />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

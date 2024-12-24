@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { link: 'Home', path: 'home' },
-    { link: 'About', path: 'about' },
-    { link: 'Services', path: 'clients' },
-    { link: 'Projects', path: 'projects' },
-    { link: 'Contact', path: 'contact' },
-    
+    { link: 'Home', path: 'home', scroll: true },
+    { link: 'About', path: 'about', scroll: true },
+    { link: 'Services', path: 'clients', scroll: true },
+    { link: 'Projects', path: 'projects', scroll: true },
+    { link: 'Contact', path: 'contact', scroll: true },
+    { link: 'Profile', path: '/profile', scroll: false }, // Regular route for Profile
   ];
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -26,19 +27,30 @@ function Header() {
 
       {/* Desktop Navigation */}
       <ul className="hidden lg:flex justify-center items-center gap-6">
-        {navItems.map(({ link, path }) => (
-          <Link
-            key={path}
-            className="text-black uppercase font-bold cursor-pointer 
-          p-3 rounded-full hover:bg-yellow-500 hover:text-white text-[15px] transition duration-300"
-            to={path}
-            spy={true}
-            offset={-100}
-            smooth={true}
-          >
-            {link}
-          </Link>
-        ))}
+        {navItems.map(({ link, path, scroll }) =>
+          scroll ? (
+            <ScrollLink
+              key={path}
+              className="text-black uppercase font-bold cursor-pointer 
+            p-3 rounded-full hover:bg-yellow-500 hover:text-white text-[15px] transition duration-300"
+              to={path}
+              spy={true}
+              offset={-100}
+              smooth={true}
+            >
+              {link}
+            </ScrollLink>
+          ) : (
+            <Link
+              key={path}
+              to={path}
+              className="text-black uppercase font-bold cursor-pointer 
+            p-3 rounded-full hover:bg-yellow-500 hover:text-white text-[15px] transition duration-300"
+            >
+              {link}
+            </Link>
+          )
+        )}
       </ul>
 
       {/* Mobile Menu Toggle */}
@@ -54,20 +66,32 @@ function Header() {
           className="absolute top-[70px] left-0 w-full bg-yellow-500 shadow-lg flex flex-col 
         items-center gap-6 py-6 lg:hidden"
         >
-          {navItems.map(({ link, path }) => (
-            <Link
-              key={path}
-              className="text-black uppercase font-semibold cursor-pointer 
-            p-2 w-full text-center hover:bg-black hover:text-white text-[18px] transition duration-300 rounded-lg"
-              to={path}
-              spy={true}
-              offset={-100}
-              smooth={true}
-              onClick={toggleMenu}
-            >
-              {link}
-            </Link>
-          ))}
+          {navItems.map(({ link, path, scroll }) =>
+            scroll ? (
+              <ScrollLink
+                key={path}
+                className="text-black uppercase font-semibold cursor-pointer 
+              p-2 w-full text-center hover:bg-black hover:text-white text-[18px] transition duration-300 rounded-lg"
+                to={path}
+                spy={true}
+                offset={-100}
+                smooth={true}
+                onClick={toggleMenu}
+              >
+                {link}
+              </ScrollLink>
+            ) : (
+              <Link
+                key={path}
+                to={path}
+                className="text-black uppercase font-semibold cursor-pointer 
+              p-2 w-full text-center hover:bg-black hover:text-white text-[18px] transition duration-300 rounded-lg"
+                onClick={toggleMenu}
+              >
+                {link}
+              </Link>
+            )
+          )}
         </ul>
       )}
     </nav>

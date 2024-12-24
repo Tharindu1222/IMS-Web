@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase } from 'lucide-react';
 import { Project } from './types';
-import { FilterBar } from './FilterBar';
-import { ProjectsGrid } from './ProjectsGrid';
-import { ErrorState } from './ErrorState';
 
-export default function Dashboard() {
+export default function PortfolioDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchProjects = async () => {
     try {
@@ -19,20 +14,14 @@ export default function Dashboard() {
       const response = await fetch('http://localhost:3000/ims');
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Error: ${response.statusText}`);
       }
       
       const data = await response.json();
-      
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid data format received');
-      }
-      
       setProjects(data);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'An unexpected error occurred';
-      console.error('Error fetching projects:', message);
-      setError(message);
+      console.error(error);
+      setError('Failed to fetch projects. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -42,45 +31,44 @@ export default function Dashboard() {
     fetchProjects();
   }, []);
 
-  const categories = [...new Set(projects.map(p => p.category))];
-
-  const filteredProjects = projects.filter(project => {
-    const matchesCategory = !selectedCategory || project.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
-            <Briefcase className="w-8 h-8 text-blue-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Portfolio Projects</h1>
-          <p className="text-lg text-gray-600">Explore our collection of amazing work</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Portfolio Projects</h1>
+
+      {error && (
+        <div className="bg-red-100 text-red-600 p-4 rounded mb-4">
+          {error}
         </div>
+      )}
 
-        {!error && (
-          <FilterBar
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onSearchChange={setSearchQuery}
-          />
-        )}
-
-        {error ? (
-          <ErrorState message={error} onRetry={fetchProjects} />
-        ) : (
-          <ProjectsGrid 
-            projects={filteredProjects}
-            isLoading={isLoading}
-          />
-        )}
-      </div>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.map((project) => (
+            <div key={project._id} className="bg-white shadow-md rounded p-4">
+              <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
+              <p className="text-gray-600 mb-2">{project.category}</p>
+              <p className="text-gray-700 mb-4">{project.description}</p>
+              
+              {Array.isArray(project.images) && project.images.length > 0 ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {project.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image.startsWith('http') ? image : `http://localhost:3000/uploads/${image}`}
+                      alt={`Project ${project.title} Image ${index + 1}`}
+                      className="w-full h-32 object-cover rounded"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No images available</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
