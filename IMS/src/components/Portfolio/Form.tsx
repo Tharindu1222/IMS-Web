@@ -1,42 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { Briefcase, Loader2 } from 'lucide-react';
-import { ProjectFormData } from './types';
-import { ImageUpload } from './ImageUpload';
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Briefcase, Loader2 } from "lucide-react";
+
+interface ProjectFormData {
+  title: string;
+  category: string;
+  description: string;
+  images?: FileList;
+}
+
+interface Project {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  images: string[];
+}
+
+function ImageUpload({
+  imagePreviews,
+  fileNames,
+  onFileUpload,
+  errors,
+}: {
+  imagePreviews: string[];
+  fileNames: string[];
+  onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: any;
+}) {
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={onFileUpload}
+        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+      />
+      {errors.images && (
+        <p className="mt-1 text-sm text-red-500">{errors.images.message}</p>
+      )}
+      <div className="grid grid-cols-3 gap-4 mt-4">
+        {imagePreviews.map((preview, index) => (
+          <div key={index} className="relative">
+            <img
+              src={preview}
+              alt={`Preview ${index + 1}`}
+              className="w-full h-32 object-cover rounded-md shadow"
+            />
+            <p className="text-sm text-gray-600 mt-1 truncate">{fileNames[index]}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Form() {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ProjectFormData>();
   const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [fileNames, setFileNames] = useState<string[]>([]);
 
+  // Fetch all projects
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/ims");
+      if (!response.ok) throw new Error("Failed to fetch projects");
+      const data = await response.json();
+      setProjects(data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
   const onSubmit = async (data: ProjectFormData) => {
     setLoading(true);
-    const imagePromises = data.images 
-      ? Array.from(data.images).map(file => {
-          return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(file);
-          });
-        }) 
-      : [];
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("category", data.category);
+    formData.append("description", data.description);
+
+    if (data.images) {
+      Array.from(data.images).forEach((file) => {
+        formData.append("images", file);
+      });
+    }
 
     try {
-      const images = await Promise.all(imagePromises);
-      const formData = { ...data, images: images.join(',') };
-
-      const response = await fetch('http://localhost:3000/ims', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      const response = await fetch("http://localhost:3000/ims", {
+        method: "POST",
+        body: formData,
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
-      alert('Project added successfully!');
+      if (!response.ok) throw new Error("Network response was not ok");
+      alert("Project added successfully!");
+      fetchProjects(); // Refresh the projects list
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error submitting form. Please try again.');
+      console.error("Error:", error);
+      alert("Error submitting form. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -51,10 +119,10 @@ export default function Form() {
       return;
     }
 
-    setValue('images', files);
-    const previews = Array.from(files).map(file => URL.createObjectURL(file));
+    setValue("images", files);
+    const previews = Array.from(files).map((file) => URL.createObjectURL(file));
     setImagePreviews(previews);
-    setFileNames(Array.from(files).map(file => file.name));
+    setFileNames(Array.from(files).map((file) => file.name));
   };
 
   useEffect(() => {
@@ -84,7 +152,7 @@ export default function Form() {
                 </label>
                 <input
                   type="text"
-                  {...register('title', { required: 'Title is required' })}
+                  {...register("title", { required: "Title is required" })}
                   className={inputClass}
                   placeholder="Enter project title"
                 />
@@ -98,7 +166,7 @@ export default function Form() {
                   Category <span className="text-red-500">*</span>
                 </label>
                 <select
-                  {...register('category', { required: 'Category is required' })}
+                  {...register("category", { required: "Category is required" })}
                   className={inputClass}
                 >
                   <option value="">Select category</option>
@@ -117,7 +185,7 @@ export default function Form() {
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
-                {...register('description', { required: 'Description is required' })}
+                {...register("description", { required: "Description is required" })}
                 className={`${inputClass} h-32 resize-none`}
                 placeholder="Describe your project..."
               />
@@ -140,12 +208,9 @@ export default function Form() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`
-                  inline-flex items-center px-6 py-3 text-base font-medium text-white
-                  bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-                  transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}
-                `}
+                className={`inline-flex items-center px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {loading ? (
                   <>
@@ -153,11 +218,38 @@ export default function Form() {
                     Submitting...
                   </>
                 ) : (
-                  'Add Project'
+                  "Add Project"
                 )}
               </button>
             </div>
           </form>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold mb-4">All Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <div key={project.id} className="bg-white rounded-lg shadow-md p-4">
+                <h3 className="text-xl font-bold">{project.title}</h3>
+                <p className="text-sm text-gray-600">{project.category}</p>
+                <p className="mt-2">{project.description}</p>
+                {Array.isArray(project.images) && project.images.length > 0 ? (
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {project.images.map((img, index) => (
+                      <img
+                        key={index}
+                        src={`http://localhost:3000${img}`}
+                        alt={`Project Image ${index + 1}`}
+                        className="w-full h-20 object-cover rounded-md"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-2">No images available</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

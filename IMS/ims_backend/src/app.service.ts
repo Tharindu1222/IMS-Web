@@ -1,50 +1,45 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose'; // Import InjectModel from Mongoose
-import { Model } from 'mongoose'; // Import Model from Mongoose
-import { Ims } from './app.entity'; // Import the Ims schema (No need to import ImsSchema here)
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Ims } from './ims.schema';
 import { CreateImsDto } from './app.dto';
 
 @Injectable()
 export class ImsServices {
   constructor(
-    @InjectModel('Ims') private readonly imsModel: Model<Ims>, // Use Mongoose's Model
+    @InjectModel(Ims.name) private readonly imsModel: Model<Ims>,
   ) {}
 
-  // Create a new ad
-  async create(createImsDto: CreateImsDto): Promise<Ims> { 
-    const ims = new this.imsModel(createImsDto);
-    return ims.save(); // Use Mongoose's save method
-  }
-
-  // Update an existing ad by ID
-  async update(id: string, updateImsDto: CreateImsDto): Promise<Ims> { 
-    const ims = await this.imsModel.findById(id).exec(); // Use Mongoose's findById
-    if (!ims) {
-      throw new NotFoundException(`Ims with ID ${id} not found`);
+  async create(createImsDto: CreateImsDto): Promise<Ims> {
+    try {
+      const ims = new this.imsModel(createImsDto);
+      return await ims.save();
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating Ims');
     }
-    Object.assign(ims, updateImsDto); // Update the ims with new data
-    return ims.save(); // Save the updated ims
   }
 
-  // Find an ims by ID
-  async findOne(id: string): Promise<Ims> { 
-    const ims = await this.imsModel.findById(id).exec(); // Use Mongoose's findById
-    if (!ims) {
-      throw new NotFoundException(`Ims with ID ${id} not found`);
+  async findAll(): Promise<Ims[]> {
+    try {
+      return this.imsModel.find().exec();
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching Ims data');
     }
-    return ims;
   }
 
-  // Get all ims
-  async findAll(): Promise<Ims[]> { // Add method to fetch all ims
-    return this.imsModel.find().exec(); // Fetch all ims
+  async findOne(id: string): Promise<Ims> {
+    try {
+      return this.imsModel.findById(id).exec();
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching the Ims');
+    }
   }
 
-  // Delete an ims by ID
-  async delete(id: string): Promise<void> { 
-    const result = await this.imsModel.findByIdAndDelete(id).exec(); // Use Mongoose's findByIdAndDelete
-    if (!result) {
-      throw new NotFoundException(`Ims with ID ${id} not found`);
+  async delete(id: string): Promise<void> {
+    try {
+      await this.imsModel.findByIdAndDelete(id).exec();
+    } catch (error) {
+      throw new InternalServerErrorException('Error deleting the Ims');
     }
   }
 }

@@ -1,24 +1,19 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-// Define Ims schema for MongoDB using Mongoose
-export const ImsSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  
-  category: { type: String, required: true },
- 
-  images: { type: String, required: false }, // Store image URLs as a JSON string or comma-separated string
-});
+@Entity('ims')
+export class Ims {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-// Create the model (this was missing previously)
-export const ImsModel = mongoose.model('Ims', ImsSchema);
-
-// Export the interface for TypeScript
-export interface Ims extends Document {
+  @Column()
   title: string;
-  description: string;
- 
+
+  @Column()
   category: string;
- 
-  images?: string;
+
+  @Column()
+  description: string;
+
+  @Column('simple-array') // Array of strings for image URLs
+  images: string[];
 }

@@ -1,34 +1,61 @@
-import { Controller, Post, Body, Put, Param, Get, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { ImsServices } from './app.service';
 import { CreateImsDto } from './app.dto';
-import { Ims } from './app.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('ims')
 export class ImsController {
   constructor(private readonly imsService: ImsServices) {}
 
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+          const ext = extname(file.originalname);
+          callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+      }),
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
+    if (!file) {
+      throw new Error('File upload failed');
+    }
+    return `/uploads/${file.filename}`;
+  }
+
   @Post()
-  createIms(@Body() createImsDto: CreateImsDto): Promise<Ims> {
+  async createIms(@Body() createImsDto: CreateImsDto) {
     return this.imsService.create(createImsDto);
   }
 
-  @Get() // This was missing the actual method definition
-  getims(): Promise<Ims[]> { // Imsded return type and fixed method name
+  @Get()
+  async getims() {
     return this.imsService.findAll();
   }
 
-  @Put(':id')
-  updateIms(@Param('id') id: string, @Body() updateImsDto: CreateImsDto): Promise<Ims> {
-    return this.imsService.update(id, updateImsDto);
-  }
-
-  @Get(':id') // Endpoint to get a specific Ims by ID
-  getIms(@Param('id') id: string): Promise<Ims> {
+  @Get(':id')
+  async getIms(@Param('id') id: string) {
     return this.imsService.findOne(id);
   }
 
-  @Delete(':id') // Endpoint to delete a specific Ims by ID
-  deleteIms(@Param('id') id: string): Promise<void> {
+  @Delete(':id')
+  async deleteIms(@Param('id') id: string) {
     return this.imsService.delete(id);
   }
 }

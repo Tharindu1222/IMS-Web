@@ -10,7 +10,6 @@ import Footer from './components/sections/Footer';
 import Services from './components/sections/servises';
 import Marketssection from './components/sections/Markets';
 import CreatePortfolio from './components/Portfolio/Form';
-import Dashboard from './components/Portfolio/Dashboard';
 import Profile from './components/sections/Profile';
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
               <Services />
               <Marketssection />
               <Portfolio />
-              <Dashboard />
               <Contact />
               <Footer />
             </>
