@@ -7,9 +7,9 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { link: 'Home', path: '/', scroll: true },
+    { link: 'Home', path: 'hero', scroll: true },
     { link: 'About', path: 'about', scroll: true },
-    { link: 'Services', path: 'clients', scroll: true },
+    { link: 'Services', path: 'services', scroll: true },
     { link: 'Projects', path: 'projects', scroll: true },
     { link: 'Contact', path: 'contact', scroll: true },
     { link: 'Profile', path: '/profile', scroll: false }, // Regular route for Profile
@@ -20,7 +20,7 @@ function Header() {
   return (
     <nav className="w-full bg-white shadow-md flex justify-between items-center lg:px-16 px-6 py-4 sticky top-0 z-50">
       {/* Logo */}
-      <h1 className="text-black md:text-4xl text-3xl font-bold font-rubik">
+      <h1 className="text-black md:text-3xl text-2xl font-bold font-rubik">
         IMS COATINGS & 
         <span className="text-yellow-500 italic"> ENGINEERING</span>
       </h1>

@@ -6,11 +6,11 @@ import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Portfolio from './components/sections/Portfolio';
 import Footer from './components/sections/Footer';
-import Services from './components/sections/Services';
 import Marketssection from './components/sections/Markets';
 import CreatePortfolio from './components/Portfolio/Form';
 
 import Profile from './components/sections/Profile';
+import Services from './components/sections/servises';
 
 
 function App() {
@@ -28,8 +28,6 @@ function App() {
               <Services />
               <Marketssection />
               <Portfolio />
-              <Services />
-              
               <Contact />
               <Footer />
             </>
