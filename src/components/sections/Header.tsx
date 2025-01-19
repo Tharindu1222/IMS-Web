@@ -9,7 +9,7 @@ function Header() {
   const navItems = [
     { link: 'Home', path: 'hero', scroll: true },
     { link: 'About', path: 'about', scroll: true },
-    { link: 'Services', path: 'services', scroll: true },
+    { link: 'Services', path: 'clients', scroll: true },
     { link: 'Projects', path: 'projects', scroll: true },
     { link: 'Contact', path: 'contact', scroll: true },
     { link: 'Profile', path: '/profile', scroll: false }, // Regular route for Profile

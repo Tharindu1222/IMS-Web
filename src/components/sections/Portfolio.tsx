@@ -9,6 +9,8 @@ import project8 from '../../assets/project8.jpg';
 import { motion } from 'framer-motion';
 import { slideUpVariants, zoomInVariants } from './animation';
 
+import { ProjectsGrid } from '../Portfolio/ProjectsGrid';
+
 function Portfolio() {
   return (
     <div id="projects" className="w-full">
@@ -55,6 +57,7 @@ function Portfolio() {
         <img src={project8} alt="Project 8" className="h-[250px] w-full object-cover" />
       </motion.div>
     </div>
+    
   );
 }
 
