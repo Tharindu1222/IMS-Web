@@ -1,4 +1,3 @@
-import heroimg from '../../assets/heroimg.png'
 import bacgroundimage from '../../assets/ims/ims3.jpg'
 import { motion } from 'framer-motion'
 import { slideUpVariants, zoomInVariants } from './animation'
@@ -45,14 +44,6 @@ function Hero(){
         </motion.div>
       </motion.div>
 
-      <div className='w-[40%] flex flex-col justify-end items-end'>
-        <motion.img
-        initial='hidden'
-        whileInView="visible"
-        variants={zoomInVariants}
-        src={heroimg} alt='hero' className='lg:h-[600px] h-[300px] lg:mb-[100px]'
-        />
-      </div>
 
     </div>
   )
