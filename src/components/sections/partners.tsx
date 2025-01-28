@@ -11,7 +11,7 @@ const Partners: FC = () => {
     >
       <div className="container">
         <div
-          className="grid grid-cols-5 gap-3 place-items-center"
+          className="grid grid-cols-3 gap-3 place-items-center"
         >
           {/* Render images with proper TypeScript support */}
           <img src={brand1} alt="brand 1" className="w-[80px]" />
