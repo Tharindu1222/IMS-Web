@@ -1,3 +1,4 @@
+import heroimg from '../../assets/heroimg.png'
 import bacgroundimage from '../../assets/ims/ims3.jpg'
 import { motion } from 'framer-motion'
 import { slideUpVariants, zoomInVariants } from './animation'
