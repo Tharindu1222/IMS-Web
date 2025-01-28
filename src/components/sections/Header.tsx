@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import logo from '../../assets/ims/PVT LTD 1.jpg';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,10 +21,11 @@ function Header() {
   return (
     <nav className="w-full bg-white shadow-md flex justify-between items-center lg:px-16 px-6 py-4 sticky top-0 z-50">
       {/* Logo */}
-      <h1 className="text-black md:text-3xl text-2xl font-bold font-rubik">
-        IMS COATINGS & 
-        <span className="text-yellow-500 italic"> ENGINEERING</span>
-      </h1>
+      <div className="flex items-center">
+      <img src={logo} // Replace with the correct path to your logo file
+      alt="IMS Coatings Logo"
+      className="w-140 h-10 mr-4" // Adjust width and height as needed
+    /></div>
 
       {/* Desktop Navigation */}
       <ul className="hidden lg:flex justify-center items-center gap-6">

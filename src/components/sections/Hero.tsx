@@ -1,5 +1,5 @@
 import heroimg from '../../assets/heroimg.png'
-import bacgroundimage from '../../assets/homeimg.webp'
+import bacgroundimage from '../../assets/ims/ims3.jpg'
 import { motion } from 'framer-motion'
 import { slideUpVariants, zoomInVariants } from './animation'
 
@@ -14,8 +14,8 @@ function Hero(){
       className='lg:w-[60%] w-full flex flex-col justify-center items-start lg:gap-8 gap-4' >
         <motion.h1
         variants={slideUpVariants}
-        className='text-yellow-500 text-2xl'
-        >WE GIVE THE BEST SOLUTIONS</motion.h1>
+        className='text-black-800 text-2xl font-bold'>
+        WE GIVE THE BEST SOLUTIONS</motion.h1>
 
         <motion.h1
         variants={slideUpVariants}
@@ -39,7 +39,7 @@ function Hero(){
           </motion.button>
           <motion.button
           variants={zoomInVariants}
-          className='border-white hover:border-yellow-500 hover:text-yellow-500 border-2 px-10 py-3 rounded-lg text-white font-bold'>
+          className='border-black hover:border-yellow-500 hover:text-white border-2 px-10 py-3 rounded-lg text-black font-bold'>
             Reach Us
           </motion.button>
         </motion.div>
