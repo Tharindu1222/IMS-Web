@@ -4,7 +4,6 @@ import Contact from './components/sections/Contact';
 import Working from './components/sections/Working';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
-import Portfolio from './components/sections/Portfolio';
 import Footer from './components/sections/Footer';
 import Marketssection from './components/sections/Markets';
 import CreatePortfolio from './components/Portfolio/Form';
@@ -29,7 +28,6 @@ function App() {
               <Working />
               <Services />
               <Marketssection />
-              <Portfolio />
               <Portfolios/>
               <Partners/>
               <Contact />

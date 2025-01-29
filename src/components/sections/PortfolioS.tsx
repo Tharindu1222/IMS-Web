@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./Services.css";
+import { motion } from "framer-motion";
+import { slideUpVariants } from "./animation";
 
 interface ServiceItem {
   title: string;
@@ -32,6 +34,33 @@ function Services(props: ServicesProps) {
   }, []);
 
   return (
+    <div id="projects" className="w-full">
+      {/* Header Section */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={slideUpVariants}
+        className="lg:w-[80%] w-[90%] m-auto py-[60px] flex flex-col justify-between items-center gap-[20px]"
+      >
+        <motion.h1
+          variants={slideUpVariants}
+          className="text-yellow-500 text-2xl"
+        >
+          Portfolio
+        </motion.h1>
+        
+        <motion.h1
+          variants={slideUpVariants}
+          className="text-white uppercase text-[40px] font-bold text-center"
+        >
+          Our Projects
+        </motion.h1>
+        <motion.div
+          variants={slideUpVariants}
+          className="w-[120px] h-[6px] bg-yellow-500"
+        ></motion.div>
+      </motion.div>
+      
     <div className="services-container">
       {!props.hideSearchBar && (
         <div className="search-container">
@@ -89,6 +118,7 @@ function Services(props: ServicesProps) {
         </div>
       )}
     </div>
+  </div>
   );
 }
 
