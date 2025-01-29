@@ -11,6 +11,7 @@ import CreatePortfolio from './components/Portfolio/Form';
 
 import Profile from './components/sections/Profile';
 import Services from './components/sections/servises';
+import Portfolios from './components/sections/PortfolioS';
 import Partners from './components/sections/partners';
 
 
@@ -29,6 +30,7 @@ function App() {
               <Services />
               <Marketssection />
               <Portfolio />
+              <Portfolios/>
               <Partners/>
               <Contact />
               <Footer />
