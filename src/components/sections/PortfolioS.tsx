@@ -98,7 +98,7 @@ function Services(props: ServicesProps) {
                   </div>
                   <div className="service-content">
   <h3 className="service-title">
-    <strong>Title:</strong> {serviceItem.title}
+   {serviceItem.title}
   </h3>
   <p className="service-description">
     <strong>Description:</strong> {serviceItem.description}
