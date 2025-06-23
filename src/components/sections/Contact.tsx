@@ -18,11 +18,17 @@ function Contact() {
     variants={slideUpVariants} className='text-yellow-500 text-2xl'
     >CONTACT US
     </motion.h1>
+    <motion.h2
+    variants={slideUpVariants} className='text-black-500 text-2xl'
+    ><b>Mr.Roshan Speering - 0777894750 <br></br><br></br>
+    Mr. Hiroshan Seneviratne - 0777567908</b>
+    </motion.h2>
 
     <motion.h1
     variants={slideUpVariants} 
     className='text-black uppercase text-[40px] font-bold'
-    >REACH US FOR ENY QUERY 
+    >
+      REACH US FOR ANY QUERY 
     </motion.h1>
     
     <div className='w-[120px] h-[6px] bg-yellow-500'></div>
@@ -35,10 +41,10 @@ function Contact() {
     whileInView='visible'
     variants={zoomInVariants}
     className='flex flex-col justify-center items-start gap-4 w-full'>
-      <input type='text' placeholder='Enter FullName' className=' px-6 py-3 border-[2px] border-black rounded-lg w-full'></input>
-      <input type='text' placeholder='Enter Email' className=' px-6 py-3 border-[2px] border-black rounded-lg w-full'></input>
-      <input type='number' placeholder='Enter Mobile Number' className=' px-6 py-3 border-[2px] border-black rounded-lg w-full'></input>
-      <textarea name="" placeholder='Enter Your Message' id="" rows={4} className=' px-6 py-3 border-[2px] border-black rounded-lg w-full'></textarea>
+      <input type='text' placeholder='Enter FullName' className=' px-6 py-3 border border-gray-300 rounded-lg w-full'></input>
+      <input type='text' placeholder='Enter Email' className=' px-6 py-3 border border-gray-300 rounded-lg w-full'></input>
+      <input type='number' placeholder='Enter Mobile Number' className=' px-6 py-3 border border-gray-300 rounded-lg w-full'></input>
+      <textarea name="" placeholder='Enter Your Message' id="" rows={4} className=' px-6 py-3 border border-gray-300 rounded-lg w-full'></textarea>
     
     <motion.button
     variants={zoomInVariants}

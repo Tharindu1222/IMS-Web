@@ -6,9 +6,11 @@ const servicesController = require('./controller/servicesController')
 const adminController = require('./controller/adminController')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
+require('dotenv').config();
 
 const app = express()
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://imscoatings.lk'];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -24,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/uploads', express.static('uploads'))
 
-mongoose.connect('mongodb+srv://kasuumperera:Kasu001@cluster0.05dwgkd.mongodb.net/ims_db?retryWrites=true&w=majority', (err) => {
+mongoose.connect(process.env.MONGO_URI, (err) => {
     if (err) {
         console.log('DB Err.')
     } else {
@@ -40,6 +42,8 @@ app.get('/hello', (req, res) => {
 
 app.post('/api/services', upload.single('image'), servicesController.addServices)
 app.get('/api/services', servicesController.getServices)
+app.delete('/api/services/:id', servicesController.deleteService)
+app.put('/api/services/:id', upload.single('image'), servicesController.updateService)
 app.get('/api/slider', servicesController.getSlider)
 
 app.get('/admin/admins', adminController.getAdmins)
@@ -48,6 +52,6 @@ app.post('/admin/login', adminController.loginAdmin)
 
 
 
-app.listen(5000, () => {
-    console.log(`Backend Running At Port 5000`)
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`Backend Running At Port ${process.env.PORT || 5000}`)
 })

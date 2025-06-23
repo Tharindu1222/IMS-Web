@@ -70,3 +70,55 @@ module.exports.getSlider = (req, res) => {
     const arr = [url1, url2, url3, url4]
     return res.send({ code: 200, message: 'success', data: arr })
 }
+
+module.exports.deleteService = async (req, res) => {
+    try {
+        // Uncomment and use your token logic if needed
+        // if (!req.headers.authorization) {
+        //     return res.send({ code: 403, message: 'No Token' })
+        // }
+        // const userDetail = await jwt.verify(req?.headers?.authorization, 'PRIV_123')
+        // if (userDetail._doc.type !== 'SUBADMIN' && userDetail._doc.type !== 'ADMIN') {
+        //     return res.send({ code: 403, message: 'Unauthorized.' })
+        // }
+        const id = req.params.id;
+        const deleted = await servicesModel.findByIdAndDelete(id);
+        if (deleted) {
+            return res.send({ code: 200, message: 'delete success' });
+        } else {
+            return res.send({ code: 404, message: 'Service not found' });
+        }
+    } catch (err) {
+        res.send({ code: 500, message: 'Internal Server Err.' });
+    }
+};
+
+module.exports.updateService = async (req, res) => {
+    try {
+        // Uncomment and use your token logic if needed
+        // if (!req.headers.authorization) {
+        //     return res.send({ code: 403, message: 'No Token' })
+        // }
+        // const userDetail = await jwt.verify(req?.headers?.authorization, 'PRIV_123')
+        // if (userDetail._doc.type !== 'SUBADMIN' && userDetail._doc.type !== 'ADMIN') {
+        //     return res.send({ code: 403, message: 'Unauthorized.' })
+        // }
+        const id = req.params.id;
+        const updateData = {
+            title: req.body.title,
+            description: req.body.description,
+            category: req.body.category
+        };
+        if (req.file && req.file.path) {
+            updateData.imageUrl = req.file.path;
+        }
+        const updated = await servicesModel.findByIdAndUpdate(id, updateData, { new: true });
+        if (updated) {
+            return res.send({ code: 200, message: 'update success', data: updated });
+        } else {
+            return res.send({ code: 404, message: 'Service not found' });
+        }
+    } catch (err) {
+        res.send({ code: 500, message: 'Internal Server Err.' });
+    }
+};

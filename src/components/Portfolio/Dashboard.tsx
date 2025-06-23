@@ -11,7 +11,7 @@ export default function PortfolioDashboard() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch('http://localhost:3000/ims');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/ims`);
       
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);

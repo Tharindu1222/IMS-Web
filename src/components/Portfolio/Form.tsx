@@ -5,6 +5,7 @@ import './App.css';
 import "../sections/Services.css";
 
 interface ServiceItem {
+  _id?: string;
   title: string;
   description: string;
   category: string;
@@ -29,10 +30,11 @@ function App(props: ServicesProps) {
   const [image, setImage] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get('http://localhost:5000/api/services')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/services`)
       .then(res => {
         setServicesData(res.data.data);
         setIsLoading(false);
@@ -50,14 +52,37 @@ function App(props: ServicesProps) {
     }
   }, [navigate]);
 
+  const handleEdit = (service: ServiceItem) => {
+    setEditId(service._id || null);
+    setTitle(service.title);
+    setDesc(service.description);
+    setCategory(service.category);
+    setImage([]); // Images must be re-uploaded if changed
+  };
+
+  const handleDelete = async (id?: string) => {
+    if (!id) return;
+    if (!window.confirm('Are you sure you want to delete this project?')) return;
+    setLoading(true);
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/services/${id}`, {
+        headers: { 'Authorization': localStorage.getItem('token') }
+      });
+      setServicesData(prev => prev.filter(item => item._id !== id));
+      setMessage({ type: 'success', text: 'Project deleted successfully!' });
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete project. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!title || !desc || !category || !image.length) {
+    if (!title || !desc || !category || (!image.length && !editId)) {
       setMessage({ type: 'error', text: 'All fields are required.' });
       return;
     }
-
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', desc);
@@ -65,29 +90,60 @@ function App(props: ServicesProps) {
     image.forEach((img, index) => {
       formData.append('image', img, `image-${index}`);
     });
-
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/services', formData, {
-        headers: { 'Authorization': localStorage.getItem('token') }
-      });
-
-      if (response.data.code === 403 && response.data.message === 'Token Expired') {
-        localStorage.removeItem('token');
-        navigate('/');
+      if (editId) {
+        // Update project
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/services/${editId}`, formData, {
+          headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        if (response.data.code === 403 && response.data.message === 'Token Expired') {
+          localStorage.removeItem('token');
+          navigate('/');
+        } else {
+          setMessage({ type: 'success', text: 'Project updated successfully!' });
+          setEditId(null);
+          setTitle('');
+          setDesc('');
+          setCategory('');
+          setImage([]);
+          // Refresh list
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/services`);
+          setServicesData(res.data.data);
+        }
       } else {
-        setMessage({ type: 'success', text: 'Project added successfully!' });
-        // Reset form
-        setTitle('');
-        setDesc('');
-        setCategory('');
-        setImage([]);
+        // Add new project
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/services`, formData, {
+          headers: { 'Authorization': localStorage.getItem('token') }
+        });
+        if (response.data.code === 403 && response.data.message === 'Token Expired') {
+          localStorage.removeItem('token');
+          navigate('/');
+        } else {
+          setMessage({ type: 'success', text: 'Project added successfully!' });
+          setTitle('');
+          setDesc('');
+          setCategory('');
+          setImage([]);
+          // Refresh list
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/services`);
+          setServicesData(res.data.data);
+        }
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to add project. Please try again.' });
+      setMessage({ type: 'error', text: editId ? 'Failed to update project. Please try again.' : 'Failed to add project. Please try again.' });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancelEdit = () => {
+    setEditId(null);
+    setTitle('');
+    setDesc('');
+    setCategory('');
+    setImage([]);
+    setMessage({ type: '', text: '' });
   };
 
   return (
@@ -161,8 +217,13 @@ function App(props: ServicesProps) {
         </div>
 
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? 'Adding Project...' : 'Add Project'}
+          {loading ? (editId ? 'Updating Project...' : 'Adding Project...') : (editId ? 'Update Project' : 'Add Project')}
         </button>
+        {editId && (
+          <button type="button" className="cancel-btn" onClick={handleCancelEdit} disabled={loading}>
+            Cancel Edit
+          </button>
+        )}
       </form>
  
     <div className="services-container">
@@ -193,7 +254,7 @@ function App(props: ServicesProps) {
                 item.description.toLowerCase().includes(filter.toLowerCase())
               )
               .map((serviceItem, index) => (
-                <div key={index} className="service-card">
+                <div key={serviceItem._id || index} className="service-card">
                   <div className="service-image">
                     <img 
                       src={`http://localhost:5000/${serviceItem.imageUrl}`}
@@ -201,19 +262,22 @@ function App(props: ServicesProps) {
                     />
                   </div>
                   <div className="service-content">
-  <h3 className="service-title">
-    <strong>Title:</strong> {serviceItem.title}
-  </h3>
-  <p className="service-description">
-    <strong>Description:</strong> {serviceItem.description}
-  </p>
-  <div className="service-footer">
-    <span className="service-category">
-      <strong>Category:</strong> {serviceItem.category}
-    </span>
-  </div>
-</div>
-
+                    <h3 className="service-title">
+                      <strong>Title:</strong> {serviceItem.title}
+                    </h3>
+                    <p className="service-description">
+                      <strong>Description:</strong> {serviceItem.description}
+                    </p>
+                    <div className="service-footer">
+                      <span className="service-category">
+                        <strong>Category:</strong> {serviceItem.category}
+                      </span>
+                    </div>
+                    <div className="service-actions">
+                      <button className="edit-btn" onClick={() => handleEdit(serviceItem)} disabled={loading}>Edit</button>
+                      <button className="delete-btn" onClick={() => handleDelete(serviceItem._id)} disabled={loading}>Delete</button>
+                    </div>
+                  </div>
                 </div>
               ))
           ) : (

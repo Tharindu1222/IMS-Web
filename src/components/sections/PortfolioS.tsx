@@ -22,7 +22,7 @@ function Services(props: ServicesProps) {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get('http://localhost:5000/api/services')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/services`)
       .then(res => {
         setServicesData(res.data.data);
         setIsLoading(false);
